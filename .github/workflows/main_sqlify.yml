@@ -13,6 +13,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -56,8 +59,9 @@ jobs:
     # environment:
     #   name: 'Production'
     #   url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    # permissions:
-    #   id-token: write #This is required for requesting the JWT
+    permissions: 
+      contents: read
+      id-token: write
 
     steps:
       - name: Download artifact from build job

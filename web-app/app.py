@@ -67,11 +67,13 @@ def api_request():
         try:
             response = requests.post(ENDPOINT, headers=headers, json=payload)
             response.raise_for_status()  # Checks for HTTP errors
-            formatted_response = json.dumps(response.json(), indent=4)
-            return render_template('response.html', result=formatted_response)
+            response_data = response.json()
+            sql_query = response_data['choices'][0]['message']['content']
+            return render_template('response.html', result=sql_query)
         except requests.RequestException as e:
             return f"Failed to make the request. Error: {e}", 500
     return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(use_reloader=False, debug=True)

@@ -11,7 +11,7 @@
 
     <style>
         body {
-            font-family: 'Archivo', cursive;
+            font-family: 'Archivo', sans-serif;
             margin: 0;
             background-color: #f4f6f8;
             display: flex;
@@ -81,7 +81,7 @@
             margin: 10px 0;
             width: 100%;
             box-sizing: border-box;
-            font-family: 'Archivo', cursive;
+            font-family: 'Archivo', sans-serif;
         }
 
         button {
@@ -106,6 +106,7 @@
             color: #333;
             font-size: 16px;
             min-height: 50px;
+            white-space: pre-wrap;
         }
 
         .footer {
@@ -169,7 +170,7 @@
                 return;
             }
 
-            fetch("/generate", {
+            fetch("/api-request", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -178,7 +179,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("resultBox").innerText = data.result;
+                document.getElementById("resultBox").innerText = data;
             })
             .catch(error => {
                 console.error("Error:", error);
@@ -186,10 +187,6 @@
             });
         }
 
-        function getResults() {
-            alert("Get Results button clicked. Implement your logic here.");
-        }
     </script>
 </body>
 </html>
-

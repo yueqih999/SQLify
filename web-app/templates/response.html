@@ -152,6 +152,73 @@
                 console.error("Failed to copy: ", err);
             });
         }
+
+        function runQuery() {
+        const query = document.getElementById("resultText").innerText;  
+        fetch("/run-query", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ query: query })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert("Error running query: " + data.error);
+            } else {
+                displayQueryResults(data);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+        }
+
+        function displayQueryResults(results) {
+            let resultsContainer = document.getElementById("queryResults");
+            if (!resultsContainer) {
+                resultsContainer = document.createElement("div");
+                resultsContainer.id = "queryResults";
+                resultsContainer.style.marginTop = "20px";
+                document.querySelector(".container").appendChild(resultsContainer);
+            }
+            
+            resultsContainer.innerHTML = "<h5>Query Results:</h5>";
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML += "<p>No results found.</p>";
+                return;
+            }
+
+            const table = document.createElement("table");
+            table.style.width = "100%";
+            table.style.borderCollapse = "collapse";
+            
+            const thead = table.createTHead();
+            const headerRow = thead.insertRow();
+            Object.keys(results[0]).forEach(key => {
+                const th = document.createElement("th");
+                th.style.border = "1px solid #ddd";
+                th.style.padding = "8px";
+                th.style.backgroundColor = "#f2f2f2";
+                th.innerText = key;
+                headerRow.appendChild(th);
+            });
+
+            const tbody = table.createTBody();
+            results.forEach(row => {
+                const rowElement = tbody.insertRow();
+                Object.values(row).forEach(value => {
+                    const cell = rowElement.insertCell();
+                    cell.style.border = "1px solid #ddd";
+                    cell.style.padding = "8px";
+                    cell.innerText = value;
+                });
+            });
+
+            resultsContainer.appendChild(table);
+        }
     </script>
 
 </head>
@@ -176,6 +243,9 @@
             <button class="button" onclick="copyToClipboard()">Copy Results</button>
             <button class="button" onclick="runQuery()">Run the Query</button>
         </div>
+
+        <div id="queryResults" style="margin-top: 20px;"></div>
+        
     </div>
 
     <div class="footer">

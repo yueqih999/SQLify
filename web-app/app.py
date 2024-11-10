@@ -1,9 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, json
-import os
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+import sqlite3
 import requests
 import base64
+import sqlite3
 
 app = Flask(__name__)
+
+def get_db_connect():
+    conn = sqlite3.connect('data/flight_database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -74,6 +80,33 @@ def api_request():
             return f"Failed to make the request. Error: {e}", 500
     return render_template('index.html')
 
+@app.route('/run-query', methods=['POST'])
+def run_query():
+    data = request.get_json()
+    query = data.get('query')
+
+    if not query:
+        return jsonify({"error": "No query provided"}), 400
+    
+    try:
+        conn = get_db_connect()
+        cursor = conn.cursor()
+
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        columns = [description[0] for description in cursor.description]
+
+        result = [dict(zip(columns, row)) for row in rows]
+
+        conn.close()
+        return jsonify(result)
+    
+    except sqlite3.Error as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(use_reloader=False, debug=True)
+    for rule in app.url_map.iter_rules():
+        print(rule)
+

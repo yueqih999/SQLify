@@ -34,7 +34,15 @@ jobs:
       - name: Zip artifact for deployment
         run: |
           cd web-app
-          zip -r release.zip ./*
+          zip -r ../release.zip ./*
+
+      - name: List files
+        run: |
+          cd web-app
+          ls -la
+          zip -r ../release.zip ./*
+          cd ..
+          ls -la
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -60,7 +68,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -74,4 +81,4 @@ jobs:
         with:
           app-name: 'SQLify'
           slot-name: 'Production'
-          
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}

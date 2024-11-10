@@ -3,50 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Input Page</title>
+    <title>Simple Input Interface - SQLify</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Archivo', cursive;
             margin: 0;
             background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
+
+        .header {
+            font-size: 64px;
+            color: #b75e71;
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            align-items: center;
+            max-width: 800px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-button {
+            color: #b75e71;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .header-button:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 80px; 
+            width: 80%;
+            max-width: 800px;
+            margin-top: 50px;
+            flex-grow: 1;
+        }
+
+        .left, .right {
+            flex: 1;
+            margin: 0 10px;
+        }
+
         .container {
             text-align: center;
             padding: 20px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
+            width: 100%;
         }
+
         input, button {
             padding: 10px;
             font-size: 16px;
             margin: 10px 0;
             width: 100%;
             box-sizing: border-box;
+            font-family: 'Archivo', cursive;
         }
+
         button {
-            background-color: #2296f3;
+            background-color: #b75e71;
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
+            border-radius: 10px;
         }
+
         button:hover {
-            background-color: #1976d2;
+            background-color: #a05465;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #333;
+            font-size: 16px;
+            min-height: 50px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #e0e0e0;
+            color: #333;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #b75e71;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <form action="/" method="post">
-            <input type="text" name="user_input" placeholder="Type something..." required>
-            <button type="submit">Generate</button>
-        </form>
+    <div class="header">
+        <span>SQLify</span>
+        <div class="header-buttons">
+            <a href="mailto:yueqih@hotmail.com" class="header-button">Email</a>
+            <a href="https://github.com/yueqih999/SQLify" class="header-button" target="_blank">GitHub</a>
+        </div>
     </div>
+
+    <div class="content">
+        <div class="left">
+            <div class="container">
+                <form id="generateForm" action="javascript:void(0);">
+                    <input type="text" id="userInput" name="user_input" placeholder="Type something..." required>
+                    <button type="button" onclick="generateContent()">Generate</button>
+                </form>
+                <div id="resultBox" class="result-box">Generated content will appear here.</div>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="container">
+                <button type="button" onclick="getResults()">Get Results</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>@ 2024 SQLify. All rights reserved.</p>
+        <p>Developed by <a href="https://www.linkedin.com/in/yueqi-hu-yueqih999/" target="_blank">Yueqi Hu</a> & <a href="https://www.linkedin.com/in/zhiyi-tang/" target="_blank">Zhiyi Tang.</p>
+    </div>
+
+    <script>
+        function generateContent() {
+            const userInput = document.getElementById("userInput").value;
+
+            if (!userInput) {
+                alert("Please enter something.");
+                return;
+            }
+
+            fetch("/generate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ input: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("resultBox").innerText = data.result;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("There was an error generating the content.");
+            });
+        }
+
+        function getResults() {
+            alert("Get Results button clicked. Implement your logic here.");
+        }
+    </script>
 </body>
 </html>
+

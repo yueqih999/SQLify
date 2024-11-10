@@ -1,0 +1,5 @@
+{
+    "name": "fullstack-react-berry-dashboard",
+    "type": "fullstack",
+    "dirs": "backend, frontend"
+}

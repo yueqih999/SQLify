@@ -7,7 +7,7 @@ import sqlite3
 app = Flask(__name__)
 
 def get_db_connect():
-    conn = sqlite3.connect('data/flight_database.db')
+    conn = sqlite3.connect('flight_database.db')
     conn.row_factory = sqlite3.Row
     return conn
 

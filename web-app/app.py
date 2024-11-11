@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 import sqlite3
 import requests
 import base64
-import sqlite3
+
+import os
 
 app = Flask(__name__)
 
 def get_db_connect():
-    conn = sqlite3.connect('data/flight_database.db')
+    conn = sqlite3.connect('flight_database.db')
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -27,9 +28,8 @@ def result():
 @app.route('/api-request', methods=['GET', 'POST'])
 def api_request():
     if request.method == 'POST':
-        API_KEY = "85WNpJ3ghADNfVwDU3H3mC7F1Mjvrzy5rqNWw4q0gW8bAekTyB2gJQQJ99AKACHYHv6XJ3w3AAABACOGyd4m"
-        #IMAGE_PATH = "path/to/your/image.png"
-        #encoded_image = base64.b64encode(open(IMAGE_PATH, 'rb').read()).decode('ascii')
+        API_KEY = os.getenv('API_KEY')
+
         headers = {
             "Content-Type": "application/json",
             "api-key": API_KEY,
